@@ -106,7 +106,7 @@ export function UpdateStatusModal({
                   重要提示
                 </p>
                 <p className="text-sm text-red-700">
-                  设置为"二退"状态将自动清空该学生的所有成绩记录。此操作不可撤销！
+                  设置为&ldquo;二退&rdquo;状态将自动清空该学生的所有成绩记录。此操作不可撤销！
                 </p>
               </div>
             </div>
@@ -117,7 +117,7 @@ export function UpdateStatusModal({
         {(selectedStatus === '修業完畢' || selectedStatus === '被當') && (
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
             <p className="text-sm text-blue-800">
-              ℹ️ 注意：通常"修業完畢"和"被當"状态由系统在计算总成绩时自动设置。
+              ℹ️ 注意：通常&ldquo;修業完畢&rdquo;和&ldquo;被當&rdquo;状态由系统在计算总成绩时自动设置。
             </p>
           </div>
         )}
