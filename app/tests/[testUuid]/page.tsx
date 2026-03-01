@@ -20,7 +20,8 @@ export default function TestDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
-  
+  const [imageRefreshKey, setImageRefreshKey] = useState(0);
+
   // Image states
   const [paperUrl, setPaperUrl] = useState<string | null>(null);
   const [histogramUrl, setHistogramUrl] = useState<string | null>(null);
@@ -59,16 +60,19 @@ export default function TestDetailPage() {
     const loadImages = async () => {
       // Load paper
       try {
+        console.log('[loadImages] Fetching paper for', test.pt_opt_score_uuid);
         const paperBlob = await downloadFile({
           test_pic_uuid: test.pt_opt_score_uuid,
           asset_type: 'paper',
         });
+        console.log('[loadImages] Paper blob:', paperBlob.size, 'bytes, type:', paperBlob.type);
         const url = URL.createObjectURL(paperBlob);
+        console.log('[loadImages] Paper URL created:', url);
         setPaperUrl(url);
-        setPaperType(paperBlob.type);
+        setPaperType(paperBlob.type || 'image/png');
         setPaperError(false);
       } catch (err) {
-        console.error('Failed to load paper:', err);
+        console.error('[loadImages] Failed to load paper:', err);
         setPaperError(true);
         setPaperUrl(null);
         setPaperType('');
@@ -76,16 +80,18 @@ export default function TestDetailPage() {
 
       // Load histogram
       try {
+        console.log('[loadImages] Fetching histogram for', test.pt_opt_score_uuid);
         const histogramBlob = await downloadFile({
           test_pic_uuid: test.pt_opt_score_uuid,
           asset_type: 'histogram',
         });
+        console.log('[loadImages] Histogram blob:', histogramBlob.size, 'bytes, type:', histogramBlob.type);
         const url = URL.createObjectURL(histogramBlob);
         setHistogramUrl(url);
-        setHistogramType(histogramBlob.type);
+        setHistogramType(histogramBlob.type || 'image/png');
         setHistogramError(false);
       } catch (err) {
-        console.error('Failed to load histogram:', err);
+        console.error('[loadImages] Failed to load histogram:', err);
         setHistogramError(true);
         setHistogramUrl(null);
         setHistogramType('');
@@ -106,7 +112,7 @@ export default function TestDetailPage() {
         return null;
       });
     };
-  }, [test?.pt_opt_score_uuid]); // Re-run when pt_opt_score_uuid changes
+  }, [test?.pt_opt_score_uuid, imageRefreshKey]); // Re-run when UUID changes or after upload
 
   const handleUpload = async (assetType: AssetType, files: File[]) => {
     if (!test) return;
@@ -125,15 +131,17 @@ export default function TestDetailPage() {
       setIsUploadModalOpen(false);
       
       // Reload test data to get updated status and pt_opt_score_uuid
-      // The useEffect will automatically reload images when pt_opt_score_uuid changes
       const updatedTest = await getTest(testUuid);
       console.log('Updated test:', updatedTest);
       setTest(updatedTest);
-      
+      // Force image re-load (UUID might not change if already set)
+      setImageRefreshKey((k) => k + 1);
+
       alert('上傳成功！');
     } catch (err) {
       console.error('Upload error:', err);
-      alert('上傳失敗：' + (err instanceof Error ? err.message : '未知錯誤'));
+      const msg = (err instanceof Error ? err.message : (err as any)?.message) || '未知錯誤';
+      alert('上傳失敗：' + msg);
       throw err;
     }
   };

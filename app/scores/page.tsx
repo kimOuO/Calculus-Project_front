@@ -320,6 +320,7 @@ export default function ScoresPage() {
         error={diagramError}
         imageUrl={diagramUrl}
         onDownload={downloadDiagram}
+        onReset={resetDiagram}
       />
     </div>
   );

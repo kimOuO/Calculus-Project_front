@@ -2,9 +2,9 @@
 
 import React from 'react';
 import { Select } from './Select';
-import { useSemesters } from '@/hooks';
+import { useTestSemesters } from '@/hooks';
 
-interface SemesterSelectProps {
+interface TestSemesterSelectProps {
   value: string;
   onChange: (value: string) => void;
   label?: string;
@@ -14,19 +14,18 @@ interface SemesterSelectProps {
 }
 
 /**
- * 共用的學期選擇器組件 
- * 自動獲取所有可用的學期選項
- * Updated: 2026-02-27 - Fixed to use student data source
+ * 考試專用的學期選擇器組件
+ * 從考試資料獲取學期選項
  */
-export function SemesterSelect({
+export function TestSemesterSelect({
   value,
   onChange,
   label = '學年學期',
   includeAll = true,
   allLabel = '全部學期',
   disabled = false,
-}: SemesterSelectProps) {
-  const { semesters, isLoading } = useSemesters();
+}: TestSemesterSelectProps) {
+  const { semesters, isLoading } = useTestSemesters();
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     onChange(e.target.value);

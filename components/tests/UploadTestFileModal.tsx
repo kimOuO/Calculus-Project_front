@@ -69,7 +69,7 @@ export function UploadTestFileModal({
       setFiles([]);
       onClose();
     } catch (err) {
-      setError(err instanceof Error ? err.message : '上傳失敗');
+      setError((err instanceof Error ? err.message : (err as any)?.message) || '上傳失敗');
     } finally {
       setIsSubmitting(false);
     }

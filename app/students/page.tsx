@@ -70,8 +70,8 @@ export default function StudentsPage() {
     }
   };
 
-  const handleUploadSubmit = async (file: File) => {
-    const result = await uploadStudents(file);
+  const handleUploadSubmit = async (file: File, uploadSemester: string) => {
+    const result = await uploadStudents(file, uploadSemester);
     refetch();
     return result;
   };
@@ -214,6 +214,7 @@ export default function StudentsPage() {
         onSubmit={handleUploadSubmit}
         isSubmitting={uploadStatus === 'loading'}
         error={uploadError}
+        defaultSemester={semester}
       />
 
       {/* Update Status Modal */}

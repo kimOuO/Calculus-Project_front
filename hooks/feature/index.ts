@@ -6,6 +6,8 @@ export * from './useStudentScores';
 export * from './useScoresWithStudents';
 export * from './useStudentByNumber';
 export * from './useSemesters';
+export * from './useStudentSemesters';
+export * from './useTestSemesters';
 export * from './useUploadStudents';
 export * from './useExportStudents';
 export * from './useUpdateStudentStatus';

@@ -22,6 +22,7 @@ interface GenerateDiagramModalProps {
   error: string | null;
   imageUrl: string | null;
   onDownload: (filename: string) => void;
+  onReset: () => void;
 }
 
 const SCORE_FIELD_OPTIONS: { value: ScoreField; label: string }[] = [
@@ -45,6 +46,7 @@ export function GenerateDiagramModal({
   error,
   imageUrl,
   onDownload,
+  onReset,
 }: GenerateDiagramModalProps) {
   const [scoreField, setScoreField] = useState<ScoreField>('score_midterm');
   const [binWidth, setBinWidth] = useState<number>(10);
@@ -189,6 +191,7 @@ export function GenerateDiagramModal({
               <Button
                 variant="secondary"
                 onClick={() => {
+                  onReset();
                   setScoreField('score_midterm');
                   setBinWidth(10);
                   setTitle('');

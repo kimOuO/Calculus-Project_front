@@ -80,10 +80,12 @@ export async function updateStudentStatus(
 
 // Upload students from Excel file
 export async function uploadStudentsExcel(
-  file: File
+  file: File,
+  semester: string,
 ): Promise<UploadStudentsExcelResponse> {
   const formData = new FormData();
   formData.append('file', file);
+  formData.append('student_semester', semester);
 
   const response = await fetch(
     `${API_CONFIG.baseURL}${API_ENDPOINTS.student.uploadExcel}`,
@@ -149,4 +151,16 @@ export async function getStudentStatusStats(
   });
   
   return stats;
+}
+
+// Get all unique semesters from student data
+export async function getStudentSemesters(): Promise<string[]> {
+  console.log('🔍 getStudentSemesters: Fetching student semesters from student data');
+  const students = await listStudents();
+  console.log('👥 getStudentSemesters: Found students:', students.length);
+  const semesters = [...new Set(students.map(student => student.student_semester))];
+  console.log('📅 getStudentSemesters: Extracted semesters:', semesters);
+  const result = semesters.sort().reverse(); // 最新學期在前
+  console.log('✅ getStudentSemesters: Returning semesters:', result);
+  return result;
 }

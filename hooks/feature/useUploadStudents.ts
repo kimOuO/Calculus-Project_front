@@ -7,12 +7,12 @@ export function useUploadStudents() {
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<UploadStudentsExcelResponse | null>(null);
 
-  const upload = async (file: File): Promise<UploadStudentsExcelResponse> => {
+  const upload = async (file: File, semester: string): Promise<UploadStudentsExcelResponse> => {
     setStatus('loading');
     setError(null);
 
     try {
-      const result = await uploadStudentsExcel(file);
+      const result = await uploadStudentsExcel(file, semester);
       setData(result);
       setStatus('success');
       return result;

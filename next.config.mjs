@@ -4,17 +4,17 @@ const nextConfig = {
   poweredByHeader: false,
   compress: true,
   output: 'standalone',
+  // Force new build ID to bypass browser cache - 2026-02-27 15:34
+  generateBuildId: async () => {
+    return `build-${Date.now()}-${Math.random().toString(36).substring(2)}`;
+  },
   env: {
     NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL,
   },
   eslint: {
-    // Warning: This allows production builds to successfully complete even if
-    // your project has ESLint errors.
     ignoreDuringBuilds: true,
   },
   typescript: {
-    // Warning: This allows production builds to successfully complete even if
-    // your project has TypeScript errors.
     ignoreBuildErrors: true,
   },
 };

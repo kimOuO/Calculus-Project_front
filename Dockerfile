@@ -20,7 +20,7 @@ COPY . .
 
 # Create environment file for build
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV NEXT_PUBLIC_API_BASE_URL=http://localhost:8000/api/v0.1/Calculus_oom/Calculus_metadata
+ENV NEXT_PUBLIC_API_BASE_URL=/api/v0.1/Calculus_oom/Calculus_metadata
 
 # Build the application
 RUN npm run build

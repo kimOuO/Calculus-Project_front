@@ -9,8 +9,8 @@ import {
   UploadTestFileModal,
   Button,
   LoadingSpinner,
-  SemesterSelect,
 } from '@/components';
+import { TestSemesterSelect } from '@/components/TestSemesterSelect';
 import { useTests, useCreateTest, useSetTestWeights, useUploadFile } from '@/hooks';
 import type { CreateTestRequest, Test, AssetType } from '@/types';
 
@@ -118,7 +118,7 @@ export default function TestsPage() {
         <div className="bg-white rounded-lg shadow p-6 mb-6">
           <div className="flex gap-4 items-end">
             <div className="flex-1 max-w-xs">
-              <SemesterSelect
+              <TestSemesterSelect
                 value={semester}
                 onChange={setSemester}
               />

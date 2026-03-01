@@ -9,6 +9,7 @@ export * from './LoadingSpinner';
 export * from './StatusBadge';
 export * from './TestStateBadge';
 export * from './SemesterSelect';
+export * from './SmartSemesterSelect';
 
 // Feature components
 export * from './students/CreateStudentModal';

@@ -65,9 +65,23 @@ export async function setTestWeights(
   return request<SetTestWeightsResponse>(API_ENDPOINTS.test.setWeight, data);
 }
 
-// Get all unique semesters
-export async function getSemesters(): Promise<string[]> {
+// Get all unique semesters from test data
+export async function getTestSemesters(): Promise<string[]> {
   const tests = await listTests();
   const semesters = [...new Set(tests.map(test => test.test_semester))];
   return semesters.sort().reverse(); // 最新學期在前
+}
+
+// Get all unique semesters from student data (updated to use student data for better UX)
+export async function getSemesters(): Promise<string[]> {
+  // Import here to avoid circular dependency
+  const { listStudents } = await import('./studentApi');
+  console.log('🔍 getSemesters: Fetching semesters from STUDENT data (not test data)');
+  const students = await listStudents();
+  console.log('👥 getSemesters: Found students:', students.length);
+  const semesters = [...new Set(students.map(student => student.student_semester))];
+  console.log('📅 getSemesters: Extracted semesters from students:', semesters);
+  const result = semesters.sort().reverse(); // 最新學期在前
+  console.log('✅ getSemesters: Returning semesters:', result);
+  return result;
 }
