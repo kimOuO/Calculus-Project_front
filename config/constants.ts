@@ -18,9 +18,9 @@ export const SCORE_FIELD_NAMES: Record<string, string> = {
 // Student status display config
 export const STUDENT_STATUS_CONFIG = {
   修業中: { label: '修業中', color: 'blue' },
-  修業完畢: { label: '修業完畢', color: 'green' },
+  修業完成: { label: '修業完成', color: 'green' },
   被當: { label: '被當', color: 'red' },
-  二退: { label: '二退', color: 'gray' },
+  退選: { label: '退選', color: 'gray' },
 } as const;
 
 // Test state display config

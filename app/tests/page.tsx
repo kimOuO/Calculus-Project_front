@@ -9,13 +9,24 @@ import {
   UploadTestFileModal,
   Button,
   LoadingSpinner,
+  Select,
 } from '@/components';
 import { TestSemesterSelect } from '@/components/TestSemesterSelect';
 import { useTests, useCreateTest, useSetTestWeights, useUploadFile } from '@/hooks';
 import type { CreateTestRequest, Test, AssetType } from '@/types';
 
+// 考試類型關鍵字對應
+const EXAM_TYPE_OPTIONS = [
+  { value: '', label: '全部考試' },
+  { value: '第一', label: '第一次段考' },
+  { value: '期中', label: '期中考' },
+  { value: '第二', label: '第二次段考' },
+  { value: '期末', label: '期末考' },
+];
+
 export default function TestsPage() {
   const [semester, setSemester] = useState('');
+  const [examTypeFilter, setExamTypeFilter] = useState('');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isWeightsModalOpen, setIsWeightsModalOpen] = useState(false);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
@@ -75,9 +86,9 @@ export default function TestsPage() {
     }
   };
 
-  const filteredTests = semester
-    ? tests.filter((test) => test.test_semester === semester)
-    : tests;
+  const filteredTests = tests
+    .filter((test) => !semester || test.test_semester === semester)
+    .filter((test) => !examTypeFilter || test.test_name.includes(examTypeFilter));
 
   const testNames = filteredTests.map((test) => test.test_name);
 
@@ -116,14 +127,22 @@ export default function TestsPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Filters */}
         <div className="bg-white rounded-lg shadow p-6 mb-6">
-          <div className="flex gap-4 items-end">
+          <div className="flex gap-4 items-end flex-wrap">
             <div className="flex-1 max-w-xs">
               <TestSemesterSelect
                 value={semester}
                 onChange={setSemester}
               />
             </div>
-            <Button variant="secondary" onClick={() => setSemester('')}>
+            <div className="w-48">
+              <Select
+                label="考試類型"
+                value={examTypeFilter}
+                onChange={(e) => setExamTypeFilter(e.target.value)}
+                options={EXAM_TYPE_OPTIONS}
+              />
+            </div>
+            <Button variant="secondary" onClick={() => { setSemester(''); setExamTypeFilter(''); }}>
               清除篩選
             </Button>
           </div>

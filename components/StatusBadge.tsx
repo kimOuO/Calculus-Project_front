@@ -10,8 +10,8 @@ interface StatusBadgeProps {
 }
 
 export function StatusBadge({ status }: StatusBadgeProps) {
-  const config = STUDENT_STATUS_CONFIG[status];
-  
+  const config = STUDENT_STATUS_CONFIG[status] ?? { label: status, color: 'gray' };
+
   return (
     <Badge color={config.color as 'blue' | 'green' | 'red' | 'gray'}>
       {config.label}

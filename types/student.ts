@@ -10,7 +10,7 @@ export interface Student {
 }
 
 // Student status enum
-export type StudentStatus = '修業中' | '二退' | '被當' | '修業完畢';
+export type StudentStatus = '修業中' | '退選' | '被當' | '修業完成';
 
 // Create student request
 export interface CreateStudentRequest {
@@ -41,9 +41,9 @@ export interface StudentFilters {
 // Student status statistics
 export interface StudentStatusStats {
   修業中: number;
-  修業完畢: number;
+  修業完成: number;
   被當: number;
-  二退: number;
+  退選: number;
 }
 
 // Update student status request

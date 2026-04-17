@@ -17,9 +17,9 @@ interface UpdateStatusModalProps {
 
 const STATUS_OPTIONS: { value: StudentStatus; label: string }[] = [
   { value: '修業中', label: '修業中' },
-  { value: '修業完畢', label: '修業完畢' },
+  { value: '修業完成', label: '修業完成' },
   { value: '被當', label: '被當' },
-  { value: '二退', label: '二退' },
+  { value: '退選', label: '退選' },
 ];
 
 export function UpdateStatusModal({
@@ -37,10 +37,10 @@ export function UpdateStatusModal({
   const handleSubmit = async () => {
     if (!student) return;
 
-    // Warning for "二退" status
-    if (selectedStatus === '二退') {
+    // Warning for "退選" status
+    if (selectedStatus === '退選') {
       const confirmed = window.confirm(
-        '⚠️ 警告：设置为"二退"状态将自动清空该学生的所有成绩记录。\n\n确定要继续吗？'
+        '⚠️ 警告：設定為「退選」狀態將自動清空該學生的所有成績記錄。\n\n確定要繼續嗎？'
       );
       if (!confirmed) return;
     }
@@ -96,8 +96,8 @@ export function UpdateStatusModal({
           />
         </div>
 
-        {/* Warning for "二退" */}
-        {selectedStatus === '二退' && (
+        {/* Warning for "退選" */}
+        {selectedStatus === '退選' && (
           <div className="bg-red-50 border border-red-200 rounded-lg p-4">
             <div className="flex items-start gap-3">
               <div className="text-red-600 text-xl">⚠️</div>
@@ -106,7 +106,7 @@ export function UpdateStatusModal({
                   重要提示
                 </p>
                 <p className="text-sm text-red-700">
-                  设置为&ldquo;二退&rdquo;状态将自动清空该学生的所有成绩记录。此操作不可撤销！
+                  設定為「退選」狀態將自動清空該學生的所有成績記錄。此操作不可撤銷！
                 </p>
               </div>
             </div>
@@ -114,10 +114,10 @@ export function UpdateStatusModal({
         )}
 
         {/* Info Note */}
-        {(selectedStatus === '修業完畢' || selectedStatus === '被當') && (
+        {(selectedStatus === '修業完成' || selectedStatus === '被當') && (
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
             <p className="text-sm text-blue-800">
-              ℹ️ 注意：通常&ldquo;修業完畢&rdquo;和&ldquo;被當&rdquo;状态由系统在计算总成绩时自动设置。
+              ℹ️ 注意：通常「修業完成」和「被當」狀態由系統在計算總成績時自動設定。
             </p>
           </div>
         )}

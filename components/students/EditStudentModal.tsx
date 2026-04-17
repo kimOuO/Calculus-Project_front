@@ -118,9 +118,9 @@ export function EditStudentModal({
           }
           options={[
             { value: '修業中', label: '修業中' },
-            { value: '二退', label: '二退' },
+            { value: '退選', label: '退選' },
             { value: '被當', label: '被當' },
-            { value: '修業完畢', label: '修業完畢' },
+            { value: '修業完成', label: '修業完成' },
           ]}
         />
 

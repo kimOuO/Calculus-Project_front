@@ -141,9 +141,9 @@ export async function getStudentStatusStats(
   
   const stats: StudentStatusStats = {
     修業中: 0,
-    修業完畢: 0,
+    修業完成: 0,
     被當: 0,
-    二退: 0,
+    退選: 0,
   };
   
   students.forEach((student) => {

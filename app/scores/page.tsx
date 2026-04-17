@@ -20,8 +20,18 @@ import {
   useTestStatisticsLazy,
   useUpdateScore,
   useGenerateScoreDiagram,
+  useTests,
 } from '@/hooks';
 import type { ScoreField } from '@/types';
+
+// 考試欄位排序與關鍵字對應
+const EXAM_ORDER: ScoreField[] = ['score_quiz1', 'score_midterm', 'score_quiz2', 'score_finalexam'];
+const SCORE_FIELD_KEYWORDS: Record<ScoreField, string> = {
+  score_quiz1: '第一',
+  score_midterm: '期中',
+  score_quiz2: '第二',
+  score_finalexam: '期末',
+};
 
 export default function ScoresPage() {
   const router = useRouter();
@@ -35,6 +45,35 @@ export default function ScoresPage() {
 
   const { scores, isLoading, isError, error, refetch } =
     useScoresWithStudents(semester);
+
+  const { tests } = useTests(semester || undefined);
+
+  // 計算目前可輸入成績的考試欄位
+  // 規則：該考試為「考卷完成」、前序考試全部「考卷成績結算」、下一場尚未開始
+  const activeScoreField = (() => {
+    if (!tests.length) return null;
+    for (let i = 0; i < EXAM_ORDER.length; i++) {
+      const field = EXAM_ORDER[i];
+      const keyword = SCORE_FIELD_KEYWORDS[field];
+      const test = tests.find((t) => t.test_name.includes(keyword));
+      if (!test || test.test_states !== '考卷完成') continue;
+      // 前序考試必須全部「考卷成績結算」
+      const prevSettled = EXAM_ORDER.slice(0, i).every((prevField) => {
+        const prevKeyword = SCORE_FIELD_KEYWORDS[prevField];
+        const prevTest = tests.find((t) => t.test_name.includes(prevKeyword));
+        return prevTest && prevTest.test_states === '考卷成績結算';
+      });
+      if (!prevSettled) continue;
+      // 下一場尚未開始
+      if (i < EXAM_ORDER.length - 1) {
+        const nextKeyword = SCORE_FIELD_KEYWORDS[EXAM_ORDER[i + 1]];
+        const nextTest = tests.find((t) => t.test_name.includes(nextKeyword));
+        if (nextTest && (nextTest.test_states === '考卷完成' || nextTest.test_states === '考卷成績結算')) continue;
+      }
+      return field;
+    }
+    return null;
+  })();
 
   const { calculate: calculateFinal, isLoading: isCalculating } =
     useCalculateFinalScores();
@@ -123,7 +162,9 @@ export default function ScoresPage() {
       alert('沒有可更新的成績記錄');
       return;
     }
-    setBatchUpdateField(field);
+    // 若有計算出的目前活躍考試欄位，自動切換
+    const targetField = activeScoreField || field;
+    setBatchUpdateField(targetField);
     setIsBatchUpdateModalOpen(true);
   };
 
@@ -234,6 +275,20 @@ export default function ScoresPage() {
                 {/* Batch Update Scores */}
                 <div className="pt-4 border-t">
                   <h3 className="text-sm font-semibold mb-2">批量更新成績</h3>
+                  {semester && activeScoreField && (
+                    <p className="text-xs text-blue-600 mb-2">
+                      目前開放輸入：
+                      <span className="font-semibold">
+                        {activeScoreField === 'score_quiz1' && '第一次小考'}
+                        {activeScoreField === 'score_midterm' && '期中考'}
+                        {activeScoreField === 'score_quiz2' && '第二次小考'}
+                        {activeScoreField === 'score_finalexam' && '期末考'}
+                      </span>
+                    </p>
+                  )}
+                  {semester && !activeScoreField && tests.length > 0 && (
+                    <p className="text-xs text-gray-500 mb-2">目前無開放輸入的考試</p>
+                  )}
                   <div className="grid grid-cols-2 gap-2">
                     <Button
                       variant="secondary"

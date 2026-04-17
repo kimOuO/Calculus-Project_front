@@ -32,6 +32,9 @@ export function BatchUpdateScoresModal({
     score_finalexam: '期末考',
   };
 
+  // 只顯示修業中的學生（退選/被當/修業完成 不可輸入成績）
+  const activeScores = scores.filter((s) => s.student_status === '修業中');
+
   const handleScoreChange = (scoreUuid: string, value: string) => {
     setScoreValues((prev) => ({
       ...prev,
@@ -45,8 +48,8 @@ export function BatchUpdateScoresModal({
 
     // Validate all scores
     const updates: Array<{ f_student_uuid: string; update_field: ScoreField; score_value: string }> = [];
-    
-    for (const score of scores) {
+
+    for (const score of activeScores) {
       const value = scoreValues[score.score_uuid];
       
       if (value && value.trim() !== '') {
@@ -107,10 +110,15 @@ export function BatchUpdateScoresModal({
 
         <div className="text-sm text-gray-600 mb-4">
           <p>請輸入每位學生的成績（0-100），留空表示不更新該學生。</p>
+          {scores.length !== activeScores.length && (
+            <p className="text-amber-600 mt-1">
+              已排除 {scores.length - activeScores.length} 位狀態非修業中的學生（退選/被當/修業完成）。
+            </p>
+          )}
         </div>
 
         <div className="max-h-96 overflow-y-auto space-y-3">
-          {scores.map((score) => (
+          {activeScores.map((score) => (
             <div
               key={score.score_uuid}
               className="flex items-center gap-4 p-3 border rounded-md"
